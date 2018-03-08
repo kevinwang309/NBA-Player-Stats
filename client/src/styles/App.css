@@ -1,0 +1,53 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  /* animation: App-logo-spin infinite 20s linear; */
+  height: 80px;
+}
+
+.App-header {
+  /* background-color: #222; */
+  height: 150px;
+  padding: 20px;
+  color: black;
+}
+
+.App-title {
+  font-size: 2em;
+  font-family: "Impact";
+}
+
+.App-intro {
+  font-size: large;
+}
+
+.playerStats {
+  padding-top: 170px;
+  display: grid;
+  grid-template-columns: 1fr 150px 400px 350px 350px 1fr;
+  grid-template-rows: 500px;
+}
+
+.playerStats > .stats {
+  grid-column: 2;
+}
+
+.playerStats > .shotChart {
+  grid-column: 3;
+}
+
+.playerStats > .FG {
+  grid-column: 4;
+}
+
+.playerStats > .Freq {
+  grid-column: 5;
+}
+
+
+/* @keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+} */

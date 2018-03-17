@@ -17,45 +17,35 @@ class LineChart extends Component {
   createLineChart(){
       // const node = this.node;
       const data = this.state.data;
-      const id = this.props.id;
+      const id = this.props.id,
+          xKey = this.props.xKey,
+          yKey = this.props.yKey;
       const svg = d3.select("."+this.props.id).append("svg"),
-          margin = {top: 20, right: 20, bottom: 20, left: 50},
-          width = this.props.width - margin.left - margin.right,
-          height = this.props.height - margin.top - margin.bottom;
+          margin = {top: 20, right: 0, bottom: 20, left: 50};
+          // width = this.props.width - margin.left - margin.right,
+          // height = this.props.height - margin.top - margin.bottom;
 
-
-      // console.log(d3.select("#"+this.props.id))
-      // console.log(height)
-
-      // console.log(svg.node().getBBox())
-          // g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-      svg.attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+      svg.attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 300 180")
         .append("g")
         .attr("transform","translate(" + margin.left + "," + margin.top + ")")
 
+      // console.log(parseInt(d3.select("."+this.props.id).select('svg').style('width')))
+      // console.log(parseInt(d3.select("."+this.props.id).select('svg').style('height')))
+      const width = parseInt(d3.select("."+this.props.id).select('svg').style('width')) - margin.left - margin.right,
+        height = parseInt(d3.select("."+this.props.id).select('svg').style('height')) - margin.top - margin.bottom;
+
+      // console.log(height)
       const xScale = d3.scaleLinear().range([margin.left, width]),
             yScale = d3.scaleLinear().range([height, margin.top]);
       //       z = d3.scaleOrdinal(d3.schemeCategory10);
       const valueLine = d3.line();
 
-      switch(id){
-        case 'fg':
-          xScale.domain(d3.extent(data, function(d) { return d.distance; }))
-          yScale.domain([0, d3.max(data, function(d) { return d.percentage*100; })])
-          valueLine
-            .x(function(d) { return xScale(d.distance);})
-            .y(function(d) { return yScale(d.percentage*100); })
-          break;
-        case 'freq':
-          xScale.domain(d3.extent(data, function(d) { return d.distance; }))
-          yScale.domain([0, d3.max(data, function(d) { return d.freq*100; })])
-          valueLine
-            .x(function(d) { return xScale(d.distance);})
-            .y(function(d) { return yScale(d.freq*100); })
-          break;
-      }
-
+      xScale.domain(d3.extent(data, function(d) { return d[xKey]; }))
+      yScale.domain([0, d3.max(data, function(d) { return d[yKey]*100; })])
+      valueLine
+        .x(function(d) { return xScale(d[xKey]);})
+        .y(function(d) { return yScale(d[yKey]*100); })
 
       // const color = d3.scaleLinear()
       //     .domain([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18])
@@ -87,10 +77,10 @@ class LineChart extends Component {
         .style("text-anchor", "middle")
         .text(()=>{
           switch(this.props.id){
-            case 'fg':
+            case 'fg_line':
               return 'Field Goal (%)';
               break;
-            case 'freq':
+            case 'freq_line':
               return 'Frequency (%)'
               break;
           }
@@ -143,44 +133,41 @@ class LineChart extends Component {
         .style('fill', 'none')
         .style('stroke', 'black')
         .style('stroke-width', '1.5px')
-        .style('stroke-dasharray', '3 3');
+        .style('strokeDasharray', '3 3');
 
       function mousemove() {
         const x0 = xScale.invert(d3.mouse(this)[0]),
-            bisectDate = d3.bisector(d => d.distance).left,
+            bisectDate = d3.bisector(d => {
+              return d.distance
+            }).left,
             index = bisectDate(data, x0, 1),
             d0 = data[index - 1],
             d1 = data[index],
             d = x0 - d0.distance > d1.distance - x0 ? d1 : d0,
             y = [];
-
-        switch(id){
-          case 'fg':
-            y.push('percentage')
-            break;
-          case 'freq':
-            y.push('freq')
-            break;
-        }
-
-        focus.attr('transform', `translate(${xScale(d.distance)}, ${yScale(d[y[0]]*100)})`);
+        focus.attr('transform', `translate(${xScale(d[xKey])}, ${yScale(d[yKey]*100)})`);
         focus.selectAll('line.x')
           .attr('x1', 0)
-          .attr('x2', -xScale(d.distance)+margin.left)
+          .attr('x2', -xScale(d[xKey])+margin.left)
           .attr('y1', 0)
           .attr('y2', 0);
         focus.selectAll('line.y')
           .attr('x1', 0)
           .attr('x2', 0)
           .attr('y1', 0)
-          .attr('y2', height - yScale(d[y[0]]*100));
-        focus.select("text").text(function() { return Math.round(d[y[0]]*100,2)+"%"; });
+          .attr('y2', height - yScale(d[yKey]*100));
+        focus.select("text").text(function() {
+          const factor = Math.pow(10, 2);
+          const number = d[yKey]*100;
+          return Math.round(number * factor) / factor+"%";
+        });
       }
   }
 
   render(){
+      const { id } = this.props;
       return(
-          <div className={this.props.id}>
+          <div className={id}>
           </div>
       );
   }

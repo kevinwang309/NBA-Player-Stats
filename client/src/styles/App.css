@@ -26,8 +26,8 @@
 .playerStats {
   padding-top: 170px;
   display: grid;
-  grid-template-columns: 1fr 150px 400px 350px 350px 1fr;
-  grid-template-rows: 500px;
+  grid-template-columns: 1fr 150px 400px 300px 300px 1fr;
+  grid-template-rows: 600px;
 }
 
 .playerStats > .stats {
@@ -45,7 +45,6 @@
 .playerStats > .Freq {
   grid-column: 5;
 }
-
 
 /* @keyframes App-logo-spin {
   from { transform: rotate(0deg); }

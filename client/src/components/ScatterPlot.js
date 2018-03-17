@@ -53,7 +53,7 @@ class Court extends Component {
           stroke="black"
         />
         <circle
-          id="haldCourtCircle"
+          id="halfCourtCircle"
           cx={this.props.xScale(0)}
           cy={this.props.yScale(450)}
           r={this.props.xScale(60)-this.props.xScale(0)}
@@ -74,6 +74,23 @@ class Court extends Component {
           y1={this.props.yScale(-20)}
           x2={this.props.xScale(220)}
           y2={this.props.yScale(120)}
+          stroke="black"
+        />
+        <circle
+          id="restrictedArea"
+          cx={this.props.xScale(0)}
+          cy={this.props.yScale(20)}
+          r={this.props.xScale(40)-this.props.xScale(0)}
+          strokeDasharray="5, 5"
+          fillOpacity={0}
+          stroke="black"
+        />
+        <circle
+          id="hoop"
+          cx={this.props.xScale(0)}
+          cy={this.props.yScale(20)}
+          r={this.props.xScale(7.5)-this.props.xScale(0)}
+          fillOpacity={0}
           stroke="black"
         />
         <path id="threeArc" d={d} stroke="black" fillOpacity={0}/>
@@ -135,51 +152,84 @@ class XYAxis extends Component {
 }
 
 class DataCircles extends Component {
+  constructor(props){
+    super(props);
+    this.renderCircle = this.renderCircle.bind(this)
+    // console.log(props)
+  }
   renderCircle(coords) {
+    // console.log(coords)
+    // console.log(index)
+    const color = (name, made) =>{
+      // console.log(name)
+      switch(name){
+        case "made":
+         return "#90CAF9";
+         break;
+        case "missed":
+         return "#E57373";
+         break;
+        case "all":
+         if(made) return "#90CAF9";
+         else return "#E57373";
+         break;
+      }
+    }
     return (
       <circle
        cx={this.props.xScale(coords.x)}
        cy={this.props.yScale(coords.y)}
        r={3}
        key={Math.random() * 1}
-       fillOpacity={0.8}
-       fill={"#90CAF9"}
+       fillOpacity={0.3}
+       fill={"#E57373"}
       />
     );
   }
 
   render() {
-    return <g>{this.props.data.map(this.renderCircle.bind(this))}</g>
+    return <g>{this.props.data.map(data => data.map(this.renderCircle))}</g>
   }
 }
 
 class ScatterPlot extends Component {
-  getXScale() {
-    // const xMax = d3.max(this.props.data, (d) => d.x);
-
-    return d3.scaleLinear()
-      .domain([-300, 300])
-      .range([this.props.padding, (this.props.width - this.props.padding * 2)]);
+  constructor(){
+    super();
+    this.state={width: 0, height: 0};
   }
 
-  getYScale() {
-    // const yMax = d3.max(this.props.data, (d) => d.y);
+  componentDidMount(){
+    const width = parseInt(d3.select('#shotChart').style('width')),
+        height = parseInt(d3.select('#shotChart').style('height'));
+    this.setState({width: width, height: height})
+  }
 
+  getXScale(width) {
+    // const xMax = d3.max(this.props.data, (d) => d.x);
+    return d3.scaleLinear()
+      .domain([-300, 300])
+      .range([this.props.padding, (width - this.props.padding * 2)]);
+  }
+
+  getYScale(height) {
+    // const yMax = d3.max(this.props.data, (d) => d.y);
     return d3.scaleLinear()
       .domain([-20, 500])
-      .range([this.props.height - this.props.padding, this.props.padding]);
+      .range([height - this.props.padding, this.props.padding]);
   }
 
   render() {
-    const xScale = this.getXScale();
-    const yScale = this.getYScale();
-
     return (
-      <svg width={this.props.width} height={this.props.height}>
-        <Court xScale={xScale} yScale={yScale}/>
-        <DataCircles xScale={xScale} yScale={yScale} {...this.props} />
-        {/* <XYAxis xScale={xScale} yScale={yScale} {...this.props} /> */}
-      </svg>
+      <div>
+        {this.state.width !== 0 && this.state.height !== 0 ?
+          <svg id="shotChart" preserveAspectRatio="xMinYMin meet" viewBox="0 0 400 400">
+            <Court xScale={this.getXScale(this.state.width)} yScale={this.getYScale(this.state.height)}/>
+            <DataCircles xScale={this.getXScale(this.state.width)} yScale={this.getYScale(this.state.height)} dataName={this.props.dataName} {...this.props} />
+            {/* <XYAxis xScale={xScale} yScale={yScale} {...this.props} />*/}
+          </svg>:
+          <svg id="shotChart" preserveAspectRatio="xMinYMin meet" viewBox="0 0 400 400"></svg>
+        }
+      </div>
     );
   }
 }

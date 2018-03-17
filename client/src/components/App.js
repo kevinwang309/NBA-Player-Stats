@@ -29,7 +29,6 @@ class App extends Component {
   }
 }
 
-
 const mapStateToProps = (state) => {
   const { activeMenu } = state.header
   return {

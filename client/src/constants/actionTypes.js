@@ -1,1 +1,2 @@
 export const MENU_SWITCH = 'MENU_SWITCH'
+export const CHANGE_SCATTER_DATA = 'CHANGE_SCATTER_DATA'

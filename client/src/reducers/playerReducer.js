@@ -4,7 +4,8 @@ const initialState = {
   scatterDataName: "",
   scatterData: [],
   highlightedPoint : [],
-  player : "JamesHarden"
+  player : "JamesHarden",
+  optimized: false
 };
 
 export default function (state = initialState, action) {
@@ -15,6 +16,8 @@ export default function (state = initialState, action) {
       return setHighlightedPoint(state, action)
     case actionTypes.CHANGE_PLAYER:
       return changePlayer(state, action)
+      case actionTypes.SWITCH_DATA:
+        return switchData(state, action)
   }
   return state
 }
@@ -30,8 +33,11 @@ function setHighlightedPoint(state, action) {
 }
 
 function changePlayer(state, action) {
-  console.log(state)
-  console.log(action)
   const { player } = action;
   return { ...state, player };
+}
+
+function switchData(state, action) {
+  const { optimized } = action;
+  return { ...state, optimized };
 }

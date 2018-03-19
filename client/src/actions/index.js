@@ -1,9 +1,10 @@
 import {switchMenu} from './header'
-import {changeScatterData, setHighlightedPoint, changePlayer} from './player'
+import {changeScatterData, setHighlightedPoint, changePlayer, switchData} from './player'
 
 export {
   switchMenu,
   changeScatterData,
   setHighlightedPoint,
-  changePlayer
+  changePlayer,
+  switchData
 }

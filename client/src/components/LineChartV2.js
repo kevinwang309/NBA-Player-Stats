@@ -41,16 +41,17 @@ class Axis extends Component {
 
 class XYAxis extends Component {
   render() {
+    const { width_m, height_m } = this.props.svgDimensions;
     // console.log(this.props.height)
     return (
       <g className="xy-axis">
         <Axis
-          translate={"translate(0," + 140 + ")"}
+          translate={"translate(0," + height_m + ")"}
           scale={this.props.xScale}
           orient="bottom"
         />
         <Axis
-          translate={"translate(" + 49 + ",0)"}
+          translate={"translate(" + margin.left + ",0)"}
           scale={this.props.yScale}
           orient="left"
         />
@@ -145,11 +146,11 @@ class LineChart extends Component {
       const { id, setHighlightedPoint, highlightedPoint, xKey, yKey } = this.props;
       const data = this.state.data;
 
-      const width = this.props.width - margin.left - margin.right,
-          height = this.props.height - margin.top - margin.bottom;
+      const width_m = this.props.width - margin.left - margin.right,
+          height_m = this.props.height - margin.top - margin.bottom;
 
-      const xScale = d3.scaleLinear().domain(d3.extent(data, (d) => d[xKey])).range([margin.left, width]),
-            yScale = d3.scaleLinear().domain([0,100]).range([height, margin.top]);
+      const xScale = d3.scaleLinear().domain(d3.extent(data, (d) => d[xKey])).range([margin.left, width_m]),
+            yScale = d3.scaleLinear().domain([0,100]).range([height_m, margin.top]);
       //       z = d3.scaleOrdinal(d3.schemeCategory10);
       const valueLine = d3.line()
         .x(function(d) { return xScale(d[xKey]);})
@@ -159,17 +160,24 @@ class LineChart extends Component {
       return {
         xScale,
         yScale,
-        valueLine
+        valueLine,
+        width_m,
+        height_m
       };
   }
 
   render(){
       const { id, data, width, height, highlightedPoint, xKey, yKey } = this.props;
-      const { xScale, yScale, valueLine } = this._chartComponents();
+      const { xScale, yScale, valueLine, width_m, height_m } = this._chartComponents();
+
+      const svgDimensions ={
+        width_m,
+        height_m
+      }
 
       let highlightMark, text;
       if (highlightedPoint.length !== 0) {
-        highlightMark = <circle cx={xScale(highlightedPoint[xKey])} cy={yScale(highlightedPoint[yKey]*100)} r={4} className='highlight-mark' />;
+        highlightMark = <circle cx={xScale(highlightedPoint[xKey])} cy={yScale(highlightedPoint[yKey]*100)} r={3} className='highlight-mark' />;
         const factor = Math.pow(10, 2);
         const number = highlightedPoint[yKey]*100;
         let p = highlightedPoint[xKey] + "ft " +Math.round(number * factor) / factor+"%";
@@ -181,7 +189,7 @@ class LineChart extends Component {
               <path d={valueLine(data)} className='series' />
               {highlightMark}
               {text}
-              <XYAxis xScale={xScale} yScale={yScale} {...this.props} />
+              <XYAxis xScale={xScale} yScale={yScale} svgDimensions={svgDimensions} {...this.props} />
             </svg>
           </div>
       );

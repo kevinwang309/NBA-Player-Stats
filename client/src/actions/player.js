@@ -22,3 +22,11 @@ export function changePlayer(event, player) {
     player: player.value
   }
 }
+
+export function switchData(optimized) {
+  console.log(optimized.checked)
+  return {
+    type: actionTypes.SWITCH_DATA,
+    optimized: optimized.checked
+  }
+}

@@ -46,6 +46,18 @@
   grid-column: 5;
 }
 
+
+.line-chart .series {
+  fill: none;
+  stroke: #E57373;
+  stroke-width: 2px;
+}
+
+
+#shotChart circle.highlight {
+  stroke: #E57373;
+}
+
 /* @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

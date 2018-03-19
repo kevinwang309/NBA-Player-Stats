@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import { connect } from 'react-redux'
 import * as d3 from "d3";
 
 class LineChart extends Component {
    constructor(props){
       super(props)
       this.state = {
-          data : this.props.data
+          data : this.props.data,
+          highlightedPoint : this.props.highlightedPoint
       };
       this.createLineChart = this.createLineChart.bind(this)
    }
@@ -13,13 +16,22 @@ class LineChart extends Component {
   componentDidMount(){
     this.createLineChart()
   }
+  // shouldComponentUpdate(){
+  //   if (this.props.highlightedPoint === this.state.highlightedPoint) {
+  //     return false
+  //   }
+  //   else {
+  //     this.setState({"highlightedPoint": this.props.highlightedPoint})
+  //     return true
+  //   }
+  // }
 
+  componentDidUpdate(){
+  }
   createLineChart(){
       // const node = this.node;
+      const { id, setHighlightedPoint, highlightedPoint, xKey, yKey } = this.props;
       const data = this.state.data;
-      const id = this.props.id,
-          xKey = this.props.xKey,
-          yKey = this.props.yKey;
       const svg = d3.select("."+this.props.id).append("svg"),
           margin = {top: 20, right: 0, bottom: 20, left: 50};
           // width = this.props.width - margin.left - margin.right,
@@ -40,6 +52,28 @@ class LineChart extends Component {
             yScale = d3.scaleLinear().range([height, margin.top]);
       //       z = d3.scaleOrdinal(d3.schemeCategory10);
       const valueLine = d3.line();
+
+
+      // function update(data){
+      //   xScale.domain(d3.extent(data, function(d) { return d[xKey]; }))
+      //   yScale.domain([0, d3.max(data, function(d) { return d[yKey]*100; })])
+      //   valueLine
+      //     .x(function(d) { return xScale(d[xKey]);})
+      //     .y(function(d) { return yScale(d[yKey]*100); })
+      //
+      //   let line = svg
+      //     .selectAll("path")
+      //     .remove()
+			// 		.exit()
+			// 		.data([data])
+      //
+      //   line.enter()
+      //     .append("path")
+      //     .attr("class", "line")
+      //     .attr("d", valueLine)
+      //     .attr("fill",  "none")
+      //     .attr("stroke", "red")
+      // }
 
       xScale.domain(d3.extent(data, function(d) { return d[xKey]; }))
       yScale.domain([0, d3.max(data, function(d) { return d[yKey]*100; })])
@@ -87,7 +121,8 @@ class LineChart extends Component {
         })
         .attr("class", "y axis label");
 
-      svg.append("path")
+      svg
+        .append("path")
         .data([data])
         .attr("class", "line")
         .attr("d", valueLine)
@@ -145,6 +180,8 @@ class LineChart extends Component {
             d1 = data[index],
             d = x0 - d0.distance > d1.distance - x0 ? d1 : d0,
             y = [];
+
+        setHighlightedPoint(d)
         focus.attr('transform', `translate(${xScale(d[xKey])}, ${yScale(d[yKey]*100)})`);
         focus.selectAll('line.x')
           .attr('x1', 0)
@@ -162,14 +199,18 @@ class LineChart extends Component {
           return Math.round(number * factor) / factor+"%";
         });
       }
+
+      // update(data)
   }
 
   render(){
-      const { id } = this.props;
+      const { id,  highlightedPoint} = this.props;
+      // console.log(this.state)
       return(
           <div className={id}>
           </div>
       );
   }
 }
+
 export default LineChart

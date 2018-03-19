@@ -31,12 +31,12 @@ class BarChart extends Component {
         .append("g")
         .attr("transform","translate(" + margin.left + "," + margin.top + ")")
 
-      console.log(parseInt(d3.select("."+this.props.id).select('svg').style('width')))
-      console.log(parseInt(d3.select("."+this.props.id).select('svg').style('height')))
+      // console.log(parseInt(d3.select("."+this.props.id).select('svg').style('width')))
+      // console.log(parseInt(d3.select("."+this.props.id).select('svg').style('height')))
       const width = (parseInt(d3.select("."+this.props.id).select('svg').style('width')) - margin.left - margin.right)/2,
         height = parseInt(d3.select("."+this.props.id).select('svg').style('height')) - margin.top - margin.bottom;
 
-      console.log(height);
+      // console.log(height);
       const names = [],
         leftData = [],
         rightData = [];
@@ -62,9 +62,11 @@ class BarChart extends Component {
           bar_height = height/(names.length);
           // height = bar_height * (names.length);
 
-      chart = svg.attr('class', 'chart')
+      chart = svg
         .attr('width', labelArea + width + width)
-        .attr('height', height);
+        .attr('height', height)
+        .append("g")
+        .attr('class', 'bars');
 
       const xScaleLeft = d3.scaleLinear()
         .domain([0, d3.max([...leftData,...rightData])])
@@ -104,6 +106,7 @@ class BarChart extends Component {
         .attr("height", bar_height)
         .attr("fill", "#90CAF9")
         .attr("fill-opacity", 0.5)
+        .style("pointer-events", "all");
 
       const xScaleRight = d3.scaleLinear()
          .domain([0, d3.max([...leftData,...rightData])])
@@ -123,7 +126,8 @@ class BarChart extends Component {
         .attr("width", xScaleRight)
         .attr("height", bar_height)
         .attr("fill", "#E57373")
-        .attr("fill-opacity", 0.5);
+        .attr("fill-opacity", 0.5)
+        .style("pointer-events", "all");
 
       svg.append("text")
         .attr("x", (width+margin.left))
@@ -152,6 +156,7 @@ class BarChart extends Component {
         .attr("class", "y axis label");
 
       const midLine = svg.append("g")
+        .attr('class', 'midLine')
         .append("line")
         .attr("x1", width+margin.left)
         .attr("y1", margin.top/2)
@@ -186,8 +191,9 @@ class BarChart extends Component {
       svg.append("rect")
         .style("fill", "none")
         .style("pointer-events", "all")
-        .attr("width", width*2+margin.left)
+        .attr("width", width*2)
         .attr("height", height)
+        .attr("transform", "translate(" + margin.left + ",0)")
         .style("pointer-events", "all")
         .on("mouseover", function() { focus.style("display", null); })
         .on("mouseout", function() { focus.style("display", "none"); })
@@ -269,10 +275,6 @@ class BarChart extends Component {
             if(d.distance<25) return 10
             else return -10
           });
-
-        console.log(svg.select("rect.right"))
-        svg.select("rect.right")
-          .attr("fill-opacity", 1);
       }
   }
 

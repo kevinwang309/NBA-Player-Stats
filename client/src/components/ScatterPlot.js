@@ -158,20 +158,29 @@ class DataCircles extends Component {
     // console.log(props)
   }
   renderCircle(coords) {
-    // console.log(coords)
-    // console.log(index)
-    const color = (name, made) =>{
-      // console.log(name)
-      switch(name){
+    if(this.props.dataName ===  "made"){
+      if(coords.made === 0) return
+    }
+    if(this.props.dataName ===  "missed"){
+      if(coords.made === 1) return
+    }
+
+
+    const color = (name) =>{
+      switch(name.dataName){
         case "made":
-         return "#90CAF9";
-         break;
-        case "missed":
          return "#E57373";
          break;
+        case "missed":
+         return "#90CAF9";
+         break;
         case "all":
-         if(made) return "#90CAF9";
-         else return "#E57373";
+         if(coords.made === 1) {
+           return "#E57373";
+         }
+         else {
+           return "#90CAF9";
+         }
          break;
       }
     }
@@ -181,8 +190,8 @@ class DataCircles extends Component {
        cy={this.props.yScale(coords.y)}
        r={3}
        key={Math.random() * 1}
-       fillOpacity={0.3}
-       fill={"#E57373"}
+       fillOpacity={0.5}
+       fill={color(this.props)}
       />
     );
   }
@@ -214,18 +223,42 @@ class ScatterPlot extends Component {
   getYScale(height) {
     // const yMax = d3.max(this.props.data, (d) => d.y);
     return d3.scaleLinear()
-      .domain([-20, 500])
+      .domain([-100, 500])
       .range([height - this.props.padding, this.props.padding]);
   }
 
+  _handleHover(d) {
+    const { setHighlightedPoint } = this.props;
+    console.log(d)
+    // send an action indicating which data point to highlight
+    // setHighlightedPoint(d);
+  }
+
   render() {
+    const { d_data, radiusKey, highlightedPoint } = this.props;
+    const width = this.state.width;
+    const height = this.state.height;
+    const xScale = this.getXScale(this.state.width)
+    const yScale = this.getYScale(this.state.height)
     return (
       <div>
         {this.state.width !== 0 && this.state.height !== 0 ?
           <svg id="shotChart" preserveAspectRatio="xMinYMin meet" viewBox="0 0 400 400">
             <Court xScale={this.getXScale(this.state.width)} yScale={this.getYScale(this.state.height)}/>
             <DataCircles xScale={this.getXScale(this.state.width)} yScale={this.getYScale(this.state.height)} dataName={this.props.dataName} {...this.props} />
-            {/* <XYAxis xScale={xScale} yScale={yScale} {...this.props} />*/}
+            {d_data.map((d, i) => {
+              // console.log(d)
+              // console.log(highlightedPoint[radiusKey])
+              // set the highlight class name if this element is highlighted
+              const className = highlightedPoint && d[radiusKey] === highlightedPoint[radiusKey] ? 'highlight' : '';
+              return (
+                <circle key={i} className={className} r={xScale(d[radiusKey]*10)-xScale(0)} cx={xScale(0)}
+                        cy={yScale(20)} strokeWidth={4} fill="none"
+                        onMouseOver={this._handleHover.bind(this, d)}
+                        onMouseOut={this._handleHover.bind(this, null)}
+                      />
+             )
+            })}
           </svg>:
           <svg id="shotChart" preserveAspectRatio="xMinYMin meet" viewBox="0 0 400 400"></svg>
         }

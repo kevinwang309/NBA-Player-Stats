@@ -20,7 +20,7 @@ class Header extends Component {
 
         <Menu.Item name="Compare" icon="users"/>
 
-        <Menu.Item name="League" icon="line chart"/>
+        {/* <Menu.Item name="League" icon="line chart"/> */}
       </Menu>
     )
   }

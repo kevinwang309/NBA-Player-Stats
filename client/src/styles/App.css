@@ -58,6 +58,17 @@
   stroke: #E57373;
 }
 
+.compare {
+  padding-top: 170px;
+  display: grid;
+  grid-template-columns: 1fr 400px 1fr;
+  grid-template-rows: 600px;
+}
+
+.compare > .shotChart {
+  grid-column: 2;
+}
+
 /* @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

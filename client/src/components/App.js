@@ -4,21 +4,22 @@ import '../styles/App.css';
 
 import Header from './Header'
 import Player from './Player'
+import Compare from './Compare'
 import Intro from './Intro'
 
 class App extends Component {
   render() {
     const { activeMenu } = this.props
-    console.log(this.props)
     return (
       <div className="App">
         <Header/>
         {
           (() => {
-            console.log(activeMenu)
             switch (activeMenu) {
               case 'Player':
                 return <Player/>;
+              case 'Compare':
+                return <Compare/>
               default:
                 return <Player/>;
             }

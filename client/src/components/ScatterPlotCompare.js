@@ -167,21 +167,31 @@ class DataCircles extends Component {
 
 
     const color = (name) =>{
+      console.log(name)
       switch(name.dataName){
-        case "made":
-         return "#E57373";
-         break;
-        case "missed":
-         return "#90CAF9";
-         break;
-        case "all":
-         if(coords.made === 1) {
-           return "#E57373";
-         }
-         else {
-           return "#90CAF9";
-         }
-         break;
+        case "optimized":
+          switch(coords.class) {
+            case 0:
+              return "#E57373";
+            case 1:
+              return "#90CAF9";
+            case 2:
+              return "#4CAF50";
+            case 3:
+              return "#FDD835";
+          }
+          break;
+        case "raw":
+          switch(coords.class) {
+            case 0:
+              return "#E57373";
+            case 1:
+              return "#90CAF9";
+            case 2:
+              return "#4CAF50";
+            case 3:
+              return "#FDD835";
+          }
       }
     }
     return (
@@ -258,8 +268,10 @@ class ScatterPlot extends Component {
                       />
              )
             })}
-            <circle r={4} cx={xScale(-100)} cy={yScale(-50)} fill="#E57373"/><text x={xScale(-90)} y={yScale(-55)}>Made</text>
-            <circle r={4} cx={xScale(30)} cy={yScale(-50)} fill="#90CAF9"/><text x={xScale(40)} y={yScale(-55)}>Missed</text>
+            <circle r={4} cx={xScale(-300)} cy={yScale(-50)} fill="#E57373"/><text x={xScale(-280)} y={yScale(-55)}>J. Harden</text>
+            <circle r={4} cx={xScale(-120)} cy={yScale(-50)} fill="#90CAF9"/><text x={xScale(-100)} y={yScale(-55)}>S. Curry</text>
+            <circle r={4} cx={xScale(60)} cy={yScale(-50)} fill="#4CAF50"/><text x={xScale(80)} y={yScale(-55)}>L. James</text>
+            <circle r={4} cx={xScale(240)} cy={yScale(-50)} fill="#FDD835"/><text x={xScale(260)} y={yScale(-55)}>D. DeRozan</text>
           </svg>:
           <svg id="shotChart" preserveAspectRatio="xMinYMin meet" viewBox="0 0 400 400"></svg>
         }

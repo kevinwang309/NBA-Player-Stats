@@ -18,7 +18,8 @@ class Header extends Component {
           active={activeMenu === "Player"}
           onClick={(e, {name}) => onSwitchMenu(name)}/>
 
-        <Menu.Item name="Compare" icon="users"/>
+        <Menu.Item name="Compare" icon="users"
+          onClick={(e, {name}) => onSwitchMenu(name)}/>
 
         {/* <Menu.Item name="League" icon="line chart"/> */}
       </Menu>

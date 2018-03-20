@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Card, Checkbox, Dropdown, Image , Button} from 'semantic-ui-react';
+import { Card, Checkbox, Dropdown, Image , Button, Icon} from 'semantic-ui-react';
 
 import * as actions from './../actions';
-import LineChart from './LineChart';
+// import LineChart from './LineChart';
 import LineChartV2 from './LineChartV2';
 import ScatterPlot from './ScatterPlot';
-import BarChart from './BarChart';
+// import BarChart from './BarChart';
 import BarChartV2 from './BarChartV2';
 
 
@@ -47,8 +47,6 @@ class Player extends Component {
       { key: 'SC', value: 'StephenCurry', text: 'Stephen Curry' },
       { key: 'DD', value: 'DeMarDeRozan', text: 'DeMar DeRozan' },
     ]
-    console.log(this.props)
-    console.log(optimized)
     let Stats, Shots, Shot_Freq_Distance, Shot_Freq;
 
     switch(player){
@@ -90,7 +88,6 @@ class Player extends Component {
         break;
     }
 
-    console.log(Shots)
     const url = "http://stats.nba.com/media/players/230x185/"+Stats.PLAYER_ID+".png"
     return (
       <div className="playerStats">
@@ -133,7 +130,6 @@ class Player extends Component {
             <Button.Or/>
             <Button name="all" onClick={(e, {name}) => changeScatterData(name, [Shots])}>All</Button>
           </Button.Group>
-
           <ScatterPlot data={scatterData} dataName={scatterDataName} d_data={Shot_Freq_Distance} padding={30} radiusKey='distance' setHighlightedPoint={setHighlightedPoint} highlightedPoint={highlightedPoint}/>
           <Checkbox toggle label={"Optimized Data"} onChange={(e,data) => switchData(data)}/>
         </div>

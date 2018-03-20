@@ -84,16 +84,16 @@ class LineChart extends Component {
 
      svg.append("text")
        .attr("transform", "rotate(-90)")
-       .attr("x", 0 - (height / 2))
+       .attr("x", 0-(height/2))
        .attr("y", 0)
        .attr("dy", "1em")
        .style("text-anchor", "middle")
        .text(()=>{
          switch(this.props.id){
-           case 'fg_line':
+           case 'fg_line_FG':
              return 'Field Goal (%)';
              break;
-           case 'freq_line':
+           case 'fg_line_Freq':
              return 'Frequency (%)'
              break;
          }

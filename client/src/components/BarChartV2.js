@@ -143,7 +143,7 @@ class BarChart extends Component {
     svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("x", 0 - (height / 2))
-      .attr("y", -margin.left/2)
+      .attr("y", -margin.left/2 )
       .attr("dy", "1em")
       .style("text-anchor", "middle")
       .text("Distance (ft)")
@@ -179,7 +179,8 @@ class BarChart extends Component {
     if (domainX !== null && domainY !== null && mouseX != null && mouseY != null) {
      // find the nearest point to the x value
      const point = Util.findClosest(data, domainX, (d) => d[xKey]);
-     console.log(point)
+     // console.log(point)
+     let h_point = data.filter(d => d.distance === point.distance)
      setHighlightedPoint(point)
     }
     // else {
